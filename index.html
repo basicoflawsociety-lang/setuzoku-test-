@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>接続開始</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 30px;
+}
+button {
+  font-size: 20px;
+  padding: 15px 25px;
+  margin: 15px;
+}
+.warn {
+  color: red;
+}
+.ok {
+  color: green;
+}
+.box {
+  border: 2px solid #ccc;
+  padding: 20px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>接続テスト開始</h2>
+
+<div id="main"></div>
+
+<script>
+// ===== 設定 =====
+const GAS_URL = "https://script.google.com/macros/s/XXXX/exec";
+
+// ===== 環境判定 =====
+const ua = navigator.userAgent.toLowerCase();
+const isSafari = ua.includes("safari") && !ua.includes("chrome");
+const isiPhone = ua.includes("iphone");
+const isAndroid = ua.includes("android");
+
+// ===== Chromeリンク生成 =====
+const chromeUrl = "googlechrome://" + location.href.replace(/^https?:\/\//, "");
+
+// ===== 表示制御 =====
+const main = document.getElementById("main");
+
+// ===== Safariユーザー =====
+if (isSafari) {
+
+  let html = `
+  <div class="box">
+    <h3 class="warn">⚠ Safariでは正常に動作しません</h3>
+    <p>Chromeを使用してください</p>
+  `;
+
+  if (isiPhone) {
+    html += `
+    <b>【iPhone】</b><br><br>
+    ① 下のボタンをタップ<br>
+    ② Chromeで開く<br><br>
+
+    <a href="${chromeUrl}">
+      <button>👉 Chromeで開く</button>
+    </a>
+
+    <hr>
+
+    うまくいかない場合：<br>
+    ・Chromeアプリを開く<br>
+    ・QRコードを読み直す<br>
+    `;
+  }
+
+  if (isAndroid) {
+    html += `
+    <b>【Android】</b><br><br>
+    ① 下のボタンをタップ<br>
+    ② Chromeを選択<br><br>
+
+    <a href="${location.href}" target="_blank">
+      <button>👉 Chromeで開く</button>
+    </a>
+
+    <hr>
+
+    うまくいかない場合：<br>
+    ・右上メニュー → Chromeで開く<br>
+    `;
+  }
+
+  html += `
+    <hr>
+    最終手段：<br>
+    ・シークレットモードで開く<br>
+    ・再度QRコードを読み込む<br>
+  </div>
+  `;
+
+  main.innerHTML = html;
+
+}
+
+// ===== Chromeなど正常ブラウザ =====
+else {
+
+  main.innerHTML = `
+  <div class="box">
+    <h3 class="ok">接続準備OK</h3>
+    <p>そのまま進んでください</p>
+
+    <button onclick="go()">▶ 接続テストへ進む</button>
+  </div>
+  `;
+
+}
+
+// ===== GASへ遷移 =====
+function go() {
+  location.href = GAS_URL;
+}
+</script>
+
+</body>
+</html>
